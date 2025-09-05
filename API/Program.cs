@@ -1,10 +1,10 @@
 using API.Data;
 using Microsoft.EntityFrameworkCore;
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -14,8 +14,21 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                        policy =>
+                        {
+                            policy.WithOrigins("http://localhost:4200",
+                                                "https://localhost:4200")
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                        });
+});
 
 var app = builder.Build();
+
+// Add Cors at the API
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -24,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
