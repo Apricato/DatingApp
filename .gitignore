@@ -1,3 +1,30 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Dependency directories
+node_modules/
+vendor/
+target/
+build/
+
+# Environment variables
+.env
+
 # .NET build and development artifacts
 bin/
 obj/
@@ -6,21 +33,7 @@ obj/
 *.userosscache
 *.sln.docstates
 
-# Visual Studio Code
-.vscode/
-
 # NuGet packages
 *.nupkg
-# Entity Framework Migrations
 
 
-# Logs
-*.log
-
-# OS generated files
-Thumbs.db
-.DS_Store
-
-# Others
-*.swp
-*.tmp

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\API\\API.csproj": {}
+    "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\api\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\API\\API.csproj": {
+    "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\api\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\api\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\API\\API.csproj",
+        "projectPath": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\api\\API.csproj",
         "packagesPath": "C:\\Users\\Nia_I\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\API\\obj\\",
+        "outputPath": "C:\\Users\\Nia_I\\OneDrive\\Documentos\\GitHub\\DatingApp\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nia_I\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -44,7 +44,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[9.0.9, )"
             }
