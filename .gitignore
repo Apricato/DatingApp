@@ -1,0 +1,39 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Dependency directories
+node_modules/
+vendor/
+target/
+build/
+
+# Environment variables
+.env
+
+# .NET build and development artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet packages
+*.nupkg
+
+
