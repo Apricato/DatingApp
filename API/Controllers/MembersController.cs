@@ -3,7 +3,6 @@ using API.Entities;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace API.Controllers;
 
 [Route("api/[controller]")]
@@ -12,15 +11,15 @@ namespace API.Controllers;
 public class MembersController(AppDbContext context) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
+    public ActionResult<IReadOnlyList<AppUser>> GetMembers()
     {
-        return Ok(await context.User.ToListAsync());
+        return Ok(context.Users.ToList());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<AppUser>> GetMember(string id)
+    public ActionResult<AppUser> GetMember(string id)
     {
-        var member = await context.User.FindAsync(id);
+        var member = context.Users.Find(id);
         if (member == null) return NotFound();
 
         return Ok(member);

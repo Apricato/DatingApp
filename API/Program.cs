@@ -12,6 +12,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("Default"));
 });
 
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlite(builder.Configuration.GetConnectionString("Default"));
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
