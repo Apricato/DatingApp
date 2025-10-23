@@ -1,53 +1,105 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Text.Json.Serialization;
 using API.Data;
+using API.Interfaces;
+using API.Middlewares;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace API;
 
-// Add services to the container.
-builder.Services.AddControllers();
-
-builder.Services.AddDbContext<AppDbContext>(opt =>
+[ExcludeFromCodeCoverage]
+public static class Program
 {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default"));
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddHealthChecks();
+        AddServiceDefaults(builder);
 
+        builder.Services.AddControllers()
+            .AddMvcOptions(options =>
+            {
+                // Add the filter we could have
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default"));
-});
+        builder.Services.AddMemoryCache();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                        policy =>
-                        {
-                            policy.WithOrigins("http://localhost:4200",
-                                                "https://localhost:4200")
-                                    .AllowAnyHeader()
-                                    .AllowAnyMethod();
-                        });
-});
+        AddDbContext(builder);
+        AddScopedServices(builder);
 
-var app = builder.Build();
+        WebApplication app = builder.Build();
 
-// Add Cors at the API
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<AppDbContext>();
+            context.Database.Migrate();
+            Task.Run(() => Seed.SeedUsers(context));
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger>();
+            logger.LogError(ex, "Migration process failed!");
+        }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
+        // Configure the HTTP request pipeline.
+        app.UseMiddleware<ExceptionMiddleware>();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseCors(x => x.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins(
+                "http://localhost:4200",
+                "https://localhost:4200"
+            ));
+
+            app.UseDeveloperExceptionPage();
+        }
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+
+        app.Run();
+    }
+
+    private static void AddServiceDefaults(WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var tokenKey = builder.Configuration["TokenKey"]
+                    ?? throw new ArgumentNullException("Cannot get the token key - Program.cs");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+    }
+
+    private static void AddDbContext(WebApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<AppDbContext>(opt =>
+        {
+            opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"));
+        });
+    }
+
+    private static void AddScopedServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IMembersRepository, MembersRepository>();
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseCors(MyAllowSpecificOrigins);
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
