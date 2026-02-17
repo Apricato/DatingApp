@@ -1,4 +1,4 @@
-@if (member(); as member) {
+@if (membersService.member(); as member) {
 <div class="flex flex-col gap-3">
   <div class="flex gap-2">
     <span class="font-semibold">Member since:</span>
@@ -31,7 +31,9 @@
       <input class="input w-full" name="country" [(ngModel)]="editableMember.country" placeholder="Country">
     </label>
     <div class="flex self-end">
-      <button type="submit" class="btn btn-success">Update profile</button>
+      <button [disabled]="!memberProfileEditForm.dirty" type="submit" class="btn btn-success">
+        Update profile
+      </button>
     </div>
   </form> } @else {
   <div>{{member.description}}</div>
