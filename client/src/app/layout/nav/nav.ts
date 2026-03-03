@@ -2,9 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../../core/services/account-service';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { ToastService } from '../../../core/services/toast-service'; 
-import { themes } from '../Theme';
-
+import { ToastService } from '../../../core/services/toast-service';
+import { themes } from '../theme';
+import { BusyService } from '../../../core/services/busy-service';
 
 @Component({
   selector: 'app-nav',
@@ -19,6 +19,7 @@ export class Nav {
   private toast = inject(ToastService);
   protected selectedTheme = signal<string>(localStorage.getItem("theme") || "light");
   protected themes = themes;
+  protected readonly busyService = inject(BusyService);
 
   ngOnInit(): void {
     document.documentElement.setAttribute("data-theme", this.selectedTheme());
