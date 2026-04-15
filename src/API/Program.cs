@@ -2,13 +2,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Middlewares;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using API.Helpers;
+using NSwag;
 
 namespace API;
 
@@ -35,6 +36,30 @@ public static class Program
 
         AddDbContext(builder);
         AddScopedServices(builder);
+
+        builder.Services.AddOpenApiDocument(options =>
+        {
+            options.PostProcess = document =>
+            {
+                document.Info = new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Dating API",
+                    Description = "An ASP.NET Core Web API for managing Dating items",
+                    TermsOfService = "https://example.com/terms",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = "https://example.com/contact"
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = "https://example.com/license"
+                    }
+                };
+            };
+        });
 
         WebApplication app = builder.Build();
 
@@ -64,6 +89,13 @@ public static class Program
             ));
 
             app.UseDeveloperExceptionPage();
+            app.UseOpenApi();
+            app.UseSwaggerUi();
+
+            app.UseReDoc(options =>
+            {
+                options.Path = "/redoc";
+            });
         }
         app.UseAuthentication();
         app.UseAuthorization();
@@ -103,6 +135,8 @@ public static class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+        builder.Services.AddScoped<UserActivityLogger>();
         builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
     }
 }
