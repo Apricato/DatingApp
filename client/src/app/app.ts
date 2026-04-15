@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { Nav } from './layout/nav/nav';
-import { Router, RouterModule } from '@angular/router';
+import { Nav } from "../layout/nav/nav";
+import { Router, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterModule, Nav],
+  imports: [Nav, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly router = inject(Router);
+  protected router = inject(Router);
 }

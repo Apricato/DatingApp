@@ -10,9 +10,7 @@ import { environment } from '../../environments/environment';
 })
 export class TestErrors {
   private http = inject(HttpClient);
-
   baseUrl = environment.apiUrl;
-
   validationErrors = signal<string[]>([]);
 
   get400ValidationError(): void {
