@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "APP": {
+    "client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -14,6 +14,10 @@
           "skipTests": false,
           "path": "src/core/services"
         },
+        "@schematics/angular:guard": {
+          "skipTests": false,
+          "path": "src/core/guards"
+        },
         "@schematics/angular:interceptor": {
           "skipTests": false,
           "path": "src/core/interceptors"
@@ -21,6 +25,10 @@
         "@schematics/angular:resolver": {
           "skipTests": false,
           "path": "src"
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": false,
+          "path": "src/core/pipes"
         }
       },
       "root": "",
@@ -40,8 +48,7 @@
             ],
             "styles": [
               "src/styles.css"
-            ],
-            "ssr": false
+            ]
           },
           "configurations": {
             "production": {
@@ -82,10 +89,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "APP:build:production"
+              "buildTarget": "client:build:production"
             },
             "development": {
-              "buildTarget": "APP:build:development"
+              "buildTarget": "client:build:development"
             }
           },
           "defaultConfiguration": "development"

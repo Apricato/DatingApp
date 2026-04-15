@@ -47,7 +47,7 @@ public class MembersControllerTests
 
         // Act & Assert
         var membersResult = await _membersController.GetMembers();
-        var okResult = membersResult as OkObjectResult;
+        var okResult = membersResult.Result as OkObjectResult;
         Assert.That(okResult, Is.Not.Null, OK_ERROR_MESSAGE);
 
         var members = okResult.Value as IReadOnlyList<Member>;
