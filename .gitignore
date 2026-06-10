@@ -418,8 +418,5 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-# appsettings.json
-appsettings.Development.json
-
 # SQLite database files
 *.db*
